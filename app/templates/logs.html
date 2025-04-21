@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logs</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <style>
+        .action-box {
+            background-color: #2e2e2e;
+            padding: 20px;
+            margin: 20px auto;
+            border-radius: 8px;
+            max-width: 90%; /* Ändere die maximale Breite auf 90% */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .button {
+            max-width: 200px; /* Begrenze die Breite des Buttons */
+            margin: 0 auto; /* Zentriere den Button */
+            display: block; /* Block-Element für zentrierte Ausrichtung */
+        }
+    </style>
+</head>
+<body class="dark-mode">
+    <h1>Konsolenausgabe</h1>
+    <button onclick="window.location.href='/'" class="button">Zurück zur Hauptseite</button>
+    <div class="action-box">
+        <pre>
+            {{ logs }}
+        </pre>
+    </div>
+</body>
+</html>

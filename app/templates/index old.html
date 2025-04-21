@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Twitch M3U Generator</title>
+    <script>
+        function updateM3U() {
+            fetch('/update', {method: 'GET'})
+                .then(response => response.json())
+                .then(data => alert('M3U Links aktualisiert!'));
+        }
+
+        function updateJellyfinTVGuide() {
+        // URL der API, an die die Anfrage gesendet wird
+        const url = 'http://192.168.178.210:8096/ScheduledTasks/Running/bea9b218c97bbf98c5dc1303bdb9a0ca'; // Ändere dies auf deine tatsächliche URL
+
+        // Header der Anfrage
+        const headers = {
+            'Content-Type': 'application/json',
+            'X-Emby-Token': '147b00279ba149368839defb7c917f8f' // Beispiel-Header, ersetze dies mit deinem tatsächlichen Token
+        };
+        // Die POST-Anfrage mit fetch senden
+        fetch(url, {
+            method: 'POST',
+            headers: headers,
+        })
+        .then(response => response.json())  // Antwort im JSON-Format
+        .then(data => {
+            console.log('Erfolgreich:', data);  // Erfolgreiche Antwort im Browser-Console ausgeben
+        })
+        .catch(error => {
+            console.error('Fehler:', error);  // Fehler im Fall einer fehlgeschlagenen Anfrage
+        });
+    }
+    </script>
+</head>
+<body>
+    <h1>Twitch M3U Generator</h1>
+    <form action="/add" method="post">
+        <input type="text" name="streamer" placeholder="Twitch Streamer Name" required>
+        <input type="text" name="logo" placeholder="Logo URL (optional)">
+        <button type="submit">Hinzufügen</button>
+    </form>
+    
+
+    <h2>Gespeicherte Streams</h2>
+    <form action="/remove" method="post">
+        <ul>
+            {% for streamer in streamers %}
+                <li>
+                    <input type="checkbox" name="selected_streamer" value="{{ streamer }}">
+                    {{ streamer }}
+                </li>
+            {% endfor %}
+        </ul>
+        <button type="submit">Ausgewählte Streamer entfernen</button>
+    </form>
+    <br>
+    <button onclick="updateM3U()">M3U Links aktualisieren</button>
+    <h2></h2>
+    <button onclick="updateJellyfinTVGuide()">Jellyfin update TV Guide</button>
+    <h2></h2>
+    <a href="/m3u">M3U Datei herunterladen</a>
+</body>
+</html>

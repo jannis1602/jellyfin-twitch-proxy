@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Twitch M3U Generator</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <script>
+        function updateM3U() {
+            fetch('/update', {method: 'GET'})
+                .then(response => response.json())
+                .then(data => alert('M3U Links aktualisiert!'));
+        }
+
+        function copyToClipboard(elementId) {
+            const input = document.getElementById(elementId);
+            input.select();
+            input.setSelectionRange(0, 99999); // Für mobile Geräte
+            navigator.clipboard.writeText(input.value)
+                .then(() => alert('URL kopiert!'))
+                .catch(err => alert('Fehler beim Kopieren der URL: ' + err));
+        }
+    </script>
+</head>
+<body>
+    <h1>Twitch M3U Generator</h1>
+    <form action="/add" method="post">
+        <input type="text" name="streamer" placeholder="Twitch Streamer Name" required>
+        <button type="submit" onclick="alert('Streamer wird hinzugefügt!')">Hinzufügen</button>
+    </form>
+    
+
+    <h2>Gespeicherte Streams</h2>
+    <form action="/remove" method="post">
+        <ul>
+            {% for streamer in streamers %}
+                <li>
+                    <input type="checkbox" name="selected_streamer" value="{{ streamer }}">
+                    {{ streamer }}
+                </li>
+            {% endfor %}
+        </ul>
+        <button type="submit" onclick="alert('Ausgewählte Streamer werden entfernt!')">Ausgewählte Streamer entfernen</button>
+    </form>
+    
+    <div class="action-box">
+        <button onclick="fetch('/trigger-jellyfin-scan', {method: 'POST'}).then(() => alert('Jellyfin TV Guide aktualisiert!'));">
+            Jellyfin TV Guide aktualisieren
+        </button>
+        <button onclick="updateM3U(); alert('M3U Links werden aktualisiert!');">M3U Links aktualisieren</button>
+        <a href="/download-m3u" onclick="alert('M3U Datei wird heruntergeladen!')">M3U Datei herunterladen</a>
+        <a href="/logs" class="button">Konsolenausgabe anzeigen</a>
+    </div>
+
+    <!-- Neue Sektion für M3U- und XMLTV-URLs -->
+    <div class="action-box">
+        <h3>M3U- und XMLTV-URLs</h3>
+        <div class="url-container">
+            <label for="m3u-url">M3U URL:</label>
+            <input type="text" id="m3u-url" value="{{ m3u_url }}" readonly>
+            <button class="button" onclick="copyToClipboard('m3u-url')">Kopieren</button>
+        </div>
+        <div class="url-container">
+            <label for="xmltv-url">XMLTV URL:</label>
+            <input type="text" id="xmltv-url" value="{{ xmltv_url }}" readonly>
+            <button class="button" onclick="copyToClipboard('xmltv-url')">Kopieren</button>
+        </div>
+    </div>
+</body>
+</html>
